@@ -1,6 +1,6 @@
 setenforce 0
 useradd -s /sbin/nologin -b /var/spool postfix
-dnf -y install postfix postfix-mysql mysql-server dovecot dovecot-mysql
+dnf -y install postfix postfix-mysql mysql-server dovecot dovecot-mysql named
 dnf -y install http://repo.qmailtoaster.com/8/spl/sqlmd/mysql/testing/x86_64/vpopmail-5.4.33-5.qt.md.el8.x86_64.rpm
 
 #chown -R postfix:root /var/spool/postfix
@@ -58,7 +58,6 @@ wget -P /etc/dovecot https://raw.githubusercontent.com/qmtoaster/posttoasty/main
 wget -P /etc/dovecot https://raw.githubusercontent.com/qmtoaster/posttoasty/main/dovecot-sql.conf.ext
 wget -P /etc/dovecot https://raw.githubusercontent.com/qmtoaster/posttoasty/main/dh.pem
 systemctl enable --now dovecot
-#systemctl restart dovecot
 
 mv /etc/postfix/main.cf /etc/postfix/main.cf.bak
 mv /etc/postfix/master.cf /etc/postfix/master.cf.bak
@@ -68,9 +67,10 @@ wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main
 wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main/domain-maps.cf
 wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main/virtual-maps.cf
 systemctl enable --now postfix
-#systemctl restart postfix
 postmap /etc/postfix/virtual
 service postfix reload
+
+systemctl enable --now named
 
 wget -P /usr/local/bin https://raw.githubusercontent.com/qmtoaster/posttoasty/main/conntest
 chmod 755 /usr/local/bin/conntest
