@@ -70,10 +70,12 @@ systemctl enable --now postfix
 postmap /etc/postfix/virtual
 service postfix reload
 
+sed -i 's/nameserver .*/nameserver 127.0.0.1/' /etc/resolv.conf
 systemctl enable --now named
 
 wget -P /usr/local/bin https://raw.githubusercontent.com/qmtoaster/posttoasty/main/conntest
 chmod 755 /usr/local/bin/conntest
+conntest
 
 # Vpopmail add domain
 read -p "Enter domain: " domain
