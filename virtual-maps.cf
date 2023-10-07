@@ -2,5 +2,5 @@ user = vpopmail
 password = SsEeCcRrEeTt
 hosts = 127.0.0.1
 dbname = vpopmail
-query = select concat(substring(pw_dir,24),'/') from vpopmail where concat(pw_name,'@',pw_domain) = '%s'
-#query = select concat(substring(pw_dir,24),'/Maildir/') from vpopmail where concat(pw_name,'@',pw_domain) = '%s'
+#query = select concat(substring(pw_dir,24),'/') from vpopmail where concat(pw_name,'@',pw_domain) = '%s'
+query = select concat(substring(pw_dir,24),'/Maildir/') from vpopmail where concat(pw_name,'@',pw_domain) = '%s'
