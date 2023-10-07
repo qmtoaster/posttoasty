@@ -1,3 +1,5 @@
+# Install script for posttoasty Postfix/Dovecot/Vpopmail mail server
+
 #
 # Disable Selinux
 #
