@@ -75,7 +75,6 @@ systemctl enable --now named
 
 wget -P /usr/local/bin https://raw.githubusercontent.com/qmtoaster/posttoasty/main/conntest
 chmod 755 /usr/local/bin/conntest
-conntest
 
 # Vpopmail add domain
 read -p "Enter domain: " domain
@@ -90,6 +89,8 @@ fi
 /home/vpopmail/bin/valias -i postmaster@$domain root@localhost.localdomain
 
 /var/qmail/bin/qmail-newu
+
+conntest
 
 #scp 192.168.9.4:/var/qmail/control/servercert.pem /var/qmail/control
 #ln -s /var/qmail/control/servercert.pem /var/qmail/control/clientcert.pem
