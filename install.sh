@@ -83,6 +83,10 @@ if [ -z "$domain" ]; then
 fi
 
 /home/vpopmail/bin/vadddomain $domain
+/home/vpopmail/bin/valias -i postmaster@$domain mailer-daemon@localhost.localdomain
+/home/vpopmail/bin/valias -i postmaster@$domain anonymous@localhost.localdomain
+/home/vpopmail/bin/valias -i postmaster@$domain root@localhost.localdomain
+
 /var/qmail/bin/qmail-newu
 
 #scp 192.168.9.4:/var/qmail/control/servercert.pem /var/qmail/control
