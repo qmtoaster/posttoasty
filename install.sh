@@ -1,5 +1,14 @@
 setenforce 0
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
+
+# Open necessary firewall port, and disable selinux
+TAB="$(printf '\t')" && GREEN=$(tput setaf 2) && RED=$(tput setaf 1) && NORMAL=$(tput sgr0) && \
+  systemctl start firewalld && systemctl enable firewalld && \
+  ports=(20 21 22 25 80 89 110 113 143 443 465 587 993 995 3306) && \
+  for index in ${!ports[*]}; do echo -n "Opening port: ${ports[$index]} : ";tput setaf 2;firewall-cmd --zone=public --add-port=${ports[$index]}/tcp --permanent;tput sgr0; done && \
+  firewall-cmd --zone=public --add-port=53/udp --permanent && \
+  echo -n "Reload firewall settings : " && tput setaf 2 && firewall-cmd --reload && tput sgr0
+
 useradd -s /sbin/nologin -b /var/spool postfix
 dnf -y install postfix postfix-mysql mysql-server dovecot dovecot-mysql named
 dnf -y install http://repo.qmailtoaster.com/8/spl/sqlmd/mysql/testing/x86_64/vpopmail-5.4.33-5.qt.md.el8.x86_64.rpm
