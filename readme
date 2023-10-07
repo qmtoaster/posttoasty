@@ -1,1 +1,3 @@
-Hello
+Install Postfix/Dovecot with Vpopmail interface to the MySQL backend
+Download and run install.sh
+Enabling features: https://www.linuxbabe.com/mail-server/setup-basic-postfix-mail-sever-ubuntu
