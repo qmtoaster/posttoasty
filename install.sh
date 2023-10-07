@@ -1,7 +1,12 @@
+#
+# Disable Selinux
+#
 setenforce 0
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 
+#
 # Open necessary firewall port, and disable selinux
+#
 TAB="$(printf '\t')" && GREEN=$(tput setaf 2) && RED=$(tput setaf 1) && NORMAL=$(tput sgr0) && \
   systemctl start firewalld && systemctl enable firewalld && \
   ports=(20 21 22 25 80 89 110 113 143 443 465 587 993 995 3306) && \
@@ -9,7 +14,14 @@ TAB="$(printf '\t')" && GREEN=$(tput setaf 2) && RED=$(tput setaf 1) && NORMAL=$
   firewall-cmd --zone=public --add-port=53/udp --permanent && \
   echo -n "Reload firewall settings : " && tput setaf 2 && firewall-cmd --reload && tput sgr0
 
+#
+# Add postfix user...conflicts with vpopmail user
+#
 useradd -s /sbin/nologin -b /var/spool postfix
+
+#
+# Install mail server software
+#
 dnf -y install postfix postfix-mysql mysql-server dovecot dovecot-mysql named
 dnf -y install http://repo.qmailtoaster.com/8/spl/sqlmd/mysql/testing/x86_64/vpopmail-5.4.33-5.qt.md.el8.x86_64.rpm
 
@@ -21,6 +33,9 @@ dnf -y install http://repo.qmailtoaster.com/8/spl/sqlmd/mysql/testing/x86_64/vpo
 #chown postfix:root /var/lib/postfix
 #chown postfix:postfix /var/lib/postfix/master*
 
+#
+# Add necessary vpopmail files and folders
+#
 groupadd -g 2108 -r qmail
 mkdir -p /var/qmail/users
 mkdir /var/qmail/control
@@ -33,7 +48,9 @@ wget -P /var/qmail/bin  https://github.com/qmtoaster/posttoasty/raw/main/qmail-n
 chmod 0700 /var/qmail/bin/qmail-newu
 chown root:qmail /var/qmail/bin/qmail-newu
 
-# MySQL admin password
+#
+# Set MySQL password, start, and add vpopmail db
+#
 read -s -p "Enter mysqld password: " password
 if [ -z "$password" ]; then
    echo "Empty password, exiting..."
@@ -63,12 +80,18 @@ mysqladmin --defaults-extra-file=$credfile reload
 mysqladmin --defaults-extra-file=$credfile refresh
 echo "Done with vpopmail database..."
 
+#
+# Get Dovecot files and start 
+#
 mv /etc/dovecot/dovecot.conf /etc/dovecot/dovecot.conf.bak
 wget -P /etc/dovecot https://raw.githubusercontent.com/qmtoaster/posttoasty/main/dovecot.conf
 wget -P /etc/dovecot https://raw.githubusercontent.com/qmtoaster/posttoasty/main/dovecot-sql.conf.ext
 wget -P /etc/dovecot https://raw.githubusercontent.com/qmtoaster/posttoasty/main/dh.pem
 systemctl enable --now dovecot
 
+#
+# Get Postfix files, set local subnet, and start
+#
 mv /etc/postfix/main.cf /etc/postfix/main.cf.bak
 mv /etc/postfix/master.cf /etc/postfix/master.cf.bak
 wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main/main.cf
@@ -81,26 +104,35 @@ sed -i "s,^mynetworks.*,mynetworks = $network," main.cf
 postmap /etc/postfix/virtual
 systemctl enable --now postfix
 
+#
+# Enable local name server
+#
 sed -i 's/nameserver .*/nameserver 127.0.0.1/' /etc/resolv.conf
 systemctl enable --now named
 
+#
+# Download test script
+#
 wget -P /usr/local/bin https://raw.githubusercontent.com/qmtoaster/posttoasty/main/conntest
 chmod 755 /usr/local/bin/conntest
 
-# Vpopmail add domain
+#
+# Vpopmail add domain, create necessary aliases so postfix delivers mail, and update vpopmail backend files
+#
 read -p "Enter domain: " domain
 if [ -z "$domain" ]; then
    echo "Empty domain, exiting..."
    exit 1
 fi
-
 /home/vpopmail/bin/vadddomain $domain
 /home/vpopmail/bin/valias -i postmaster@$domain mailer-daemon@localhost.localdomain
 /home/vpopmail/bin/valias -i postmaster@$domain anonymous@localhost.localdomain
 /home/vpopmail/bin/valias -i postmaster@$domain root@localhost.localdomain
-
 /var/qmail/bin/qmail-newu
 
+#
+# Perform connection test
+#
 conntest
 
 exit 0
