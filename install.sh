@@ -64,6 +64,9 @@ mv /etc/postfix/main.cf /etc/postfix/main.cf.bak
 mv /etc/postfix/master.cf /etc/postfix/master.cf.bak
 wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main/main.cf
 wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main/master.cf
+wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main/alias-maps.cf
+wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main/domain-maps.cf
+wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main/virtual-maps.cf
 systemctl enable --now postfix
 #systemctl restart postfix
 postmap /etc/postfix/virtual
