@@ -92,5 +92,4 @@ fi
 
 conntest
 
-#scp 192.168.9.4:/var/qmail/control/servercert.pem /var/qmail/control
-#ln -s /var/qmail/control/servercert.pem /var/qmail/control/clientcert.pem
+exit 0
