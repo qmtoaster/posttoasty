@@ -1,8 +1,6 @@
 setenforce 0
 useradd -s /sbin/nologin -b /var/spool postfix
-dnf -y install postfix postfix-mysql
-dnf -y install mysql-server 
-dnf -y dovecot dovecot-mysql
+dnf -y install postfix postfix-mysql mysql-server dovecot dovecot-mysql
 dnf -y install http://repo.qmailtoaster.com/8/spl/sqlmd/mysql/testing/x86_64/vpopmail-5.4.33-5.qt.md.el8.x86_64.rpm
 
 #chown -R postfix:root /var/spool/postfix
