@@ -20,7 +20,7 @@ mkdir /var/qmail/bin
 chown root:qmail /var/qmail
 chown root:qmail /var/qmail/control
 chown root:qmail /var/qmail/users
-wget -P /var/qmail/bin  http://www.qmailtoaster.org/qmail-newu
+wget -P /var/qmail/bin  https://raw.githubusercontent.com/qmtoaster/posttoasty/main/qmail-newu
 chmod 0700 /var/qmail/bin/qmail-newu
 chown root:qmail /var/qmail/bin/qmail-newu
 
@@ -71,10 +71,15 @@ service postfix reload
 
 wget -P /usr/local/bin https://raw.githubusercontent.com/qmtoaster/posttoasty/main/conntest
 
-exit
+# Vpopmail add domain
+read -s -p "Enter domain: " domain
+if [ -z "$domain" ]; then
+   echo "Empty domain, exiting..."
+   exit 1
+fi
 
-/home/vpopmail/bin/vadddomain roosmem.org
+/home/vpopmail/bin/vadddomain $domain
 /var/qmail/bin/qmail-newu
 
-scp 192.168.9.4:/var/qmail/control/servercert.pem /var/qmail/control
-ln -s /var/qmail/control/servercert.pem /var/qmail/control/clientcert.pem
+#scp 192.168.9.4:/var/qmail/control/servercert.pem /var/qmail/control
+#ln -s /var/qmail/control/servercert.pem /var/qmail/control/clientcert.pem
