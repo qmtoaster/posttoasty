@@ -20,7 +20,7 @@ mkdir /var/qmail/bin
 chown root:qmail /var/qmail
 chown root:qmail /var/qmail/control
 chown root:qmail /var/qmail/users
-wget -P /var/qmail/bin  https://raw.githubusercontent.com/qmtoaster/posttoasty/main/qmail-newu
+wget -P /var/qmail/bin  https://github.com/qmtoaster/posttoasty/raw/main/qmail-newu
 chmod 0700 /var/qmail/bin/qmail-newu
 chown root:qmail /var/qmail/bin/qmail-newu
 
