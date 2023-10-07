@@ -52,14 +52,14 @@ mysqladmin --defaults-extra-file=$credfile reload
 mysqladmin --defaults-extra-file=$credfile refresh
 echo "Done with vpopmail database..."
 
-cp /etc/dovecot/dovecot.conf /etc/dovecot/dovecot.conf.bak
+mv /etc/dovecot/dovecot.conf /etc/dovecot/dovecot.conf.bak
 wget -P /etc/dovecot https://raw.githubusercontent.com/qmtoaster/posttoasty/main/dovecot.conf
 wget -P /etc/dovecot https://raw.githubusercontent.com/qmtoaster/posttoasty/main/dovecot-sql.conf.ext
 systemctl enable --now dovecot
 #systemctl restart dovecot
 
-cp /etc/postfix/main.cf /etc/postfix/main.cf.bak
-cp /etc/postfix/master.cf /etc/postfix/master.cf.bak
+mv /etc/postfix/main.cf /etc/postfix/main.cf.bak
+mv /etc/postfix/master.cf /etc/postfix/master.cf.bak
 wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main/main.cf
 wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main/master.cf
 systemctl enable --now postfix
