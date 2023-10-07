@@ -69,9 +69,8 @@ wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main
 wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main/virtual-maps.cf
 network=`ip -o -f inet addr show | awk '/scope global/ {print $4}' | sed 's#[0-9]*/#0/#g'`
 sed -i "s,^mynetworks.*,mynetworks = $network," main.cf
-systemctl enable --now postfix
 postmap /etc/postfix/virtual
-service postfix reload
+systemctl enable --now postfix
 
 sed -i 's/nameserver .*/nameserver 127.0.0.1/' /etc/resolv.conf
 systemctl enable --now named
