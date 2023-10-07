@@ -70,7 +70,7 @@ service postfix reload
 wget -P /usr/local/bin https://raw.githubusercontent.com/qmtoaster/posttoasty/main/conntest
 
 # Vpopmail add domain
-read -s -p "Enter domain: " domain
+read -p "Enter domain: " domain
 if [ -z "$domain" ]; then
    echo "Empty domain, exiting..."
    exit 1
