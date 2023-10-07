@@ -1,0 +1,66 @@
+#!/bin/bash
+
+function rplspl()
+{
+   spl=('%' '#' '$' '!' '&' "'" '(' ')' '*' '+' ',' '/' ':' ';' '=' '?' '@' '[' ']')
+   rep=('%24' '%23' '%21' '%25' '%26' '%27' '%28' '%29' '%2A' '%2B' '%2C' '%2F' '%3A' '%3B' '%3D' '%3F' '%40' '%5B' '%5D')
+
+   local retval=$1
+
+   for i in "${!spl[@]}"; do
+      if [[ "$retval" == *"${spl[$i]}"* ]]; then
+          retval=${retval//${spl[$i]}/${rep[$i]}}
+      fi
+   done
+   echo "$retval"
+}
+
+function imapscript () {
+echo "a login $1 $2"
+echo 'a logout'
+sleep 1
+echo 'quit'
+}
+
+
+read -p "Enter a valid remote email account to which QMT will send mail via Submission & SMTPS: " ruser
+if [ -z "$ruser" ]
+then
+   echo "No remote user entered, exiting..."
+   exit 1
+fi
+
+user=postmaster
+host=192.168.9.127
+DOMAINS=/home/vpopmail/domains
+
+for domain in `ls $DOMAINS`
+do
+   pass=`/home/vpopmail/bin/vuserinfo $user@$domain | grep "clear passwd: " | sed 's/clear passwd: //'`
+done
+if [ -z "$domain" ]; then echo "No domain..." && exit 1; fi
+
+opass=$(rplspl $pass)
+curl -v --insecure imaps://"${user}"%40"${domain}":"${opass}"@${host} &> ./xxx
+#imapscript "$user@$domain" "$pass" | openssl s_client -crlf -connect $host:993 &> ./xxx
+if [[ ! -z "`grep \"Logged in\" ./xxx`" ]]; then STATUS=success && COLOR=2; else STATUS=failed && COLOR=1; fi
+echo -n "IMAPS: $user@$domain [" && tput setaf ${COLOR} && echo -n ${STATUS} && tput sgr0 && echo "]"
+
+dswak=/usr/local/bin
+#echo "Host: $host"
+#echo "To: $ruser"
+#echo "From: $user@$domain"
+#echo "Auth: $user@$domain"
+#echo "Pass: $pass"
+
+[ ! -f $dswak/swaks ] && wget -P $dswak http://www.jetmore.org/john/code/swaks/latest/swaks &> /dev/null && chown root.root $dswak/swaks && chmod +x $dswak/swaks
+swaks --to $ruser --from $user@$domain --server $host --port 587 --ehlo test -tls --auth login --auth-user $user@$domain --auth-password $pass &> ./xxx
+if [[ ! -z "`grep \"250 2.0.0 Ok: queued\" ./xxx`" ]]; then STATUS=success && COLOR=2; else STATUS=failed && COLOR=1; fi
+echo -n "Submission: $user@$domain --> $ruser " && echo -n "["  && tput setaf ${COLOR} && echo -n ${STATUS} && tput sgr0 && echo  "]"
+#cat ./xxx
+
+swaks --to $ruser --from $user@$domain --server $host --port 465 --ehlo test -tlsc --auth login --auth-user $user@$domain --auth-password $pass &> ./xxx
+if [[ ! -z "`grep \"250 2.0.0 Ok: queued\" ./xxx`" ]]; then STATUS=success && COLOR=2; else STATUS=failed && COLOR=1; fi
+echo -n "SMTPS: $user@$domain --> $ruser " && echo -n "["  && tput setaf ${COLOR} && echo -n ${STATUS} && tput sgr0 && echo  "]"
+#cat ./xxx
+rm -f ./xxx
