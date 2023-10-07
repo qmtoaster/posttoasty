@@ -1,0 +1,5 @@
+user = vpopmail
+password = SsEeCcRrEeTt
+hosts = 127.0.0.1
+dbname = vpopmail
+query = select valias_line from valias where concat(alias,'@',domain) = '%s'  
