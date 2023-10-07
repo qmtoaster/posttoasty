@@ -55,6 +55,7 @@ echo "Done with vpopmail database..."
 mv /etc/dovecot/dovecot.conf /etc/dovecot/dovecot.conf.bak
 wget -P /etc/dovecot https://raw.githubusercontent.com/qmtoaster/posttoasty/main/dovecot.conf
 wget -P /etc/dovecot https://raw.githubusercontent.com/qmtoaster/posttoasty/main/dovecot-sql.conf.ext
+wget -P /etc/dovecot https://raw.githubusercontent.com/qmtoaster/posttoasty/main/dh.pem
 systemctl enable --now dovecot
 #systemctl restart dovecot
 
