@@ -70,6 +70,7 @@ postmap /etc/postfix/virtual
 service postfix reload
 
 wget -P /usr/local/bin https://raw.githubusercontent.com/qmtoaster/posttoasty/main/conntest
+chmod 755 /usr/local/bin/conntest
 
 # Vpopmail add domain
 read -p "Enter domain: " domain
