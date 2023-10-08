@@ -32,7 +32,7 @@ useradd -s /sbin/nologin -b /var/spool postfix
 # Install mail server software
 #
 dnf -y install postfix postfix-mysql mysql-server dovecot dovecot-mysql
-dnf -y install http://repo.qmailtoaster.com/8/spl/sqlmd/mysql/testing/x86_64/vpopmail-5.4.33-5.qt.md.el8.x86_64.rpm
+dnf -y install https://github.com/qmtoaster/posttoasty/raw/main/vpopmail-5.4.33-5.qt.md.el8.x86_64.rpm
 
 #
 # Add necessary vpopmail files and folders
