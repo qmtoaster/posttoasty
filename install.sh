@@ -39,14 +39,11 @@ dnf -y install http://repo.qmailtoaster.com/8/spl/sqlmd/mysql/testing/x86_64/vpo
 # Add necessary vpopmail files and folders
 #
 groupadd -g 2108 -r qmail
-mkdir -p /var/qmail/users
-mkdir /var/qmail/control
-mkdir /var/qmail/bin
-chown -R root:qmail /var/qmail
-wget -P /var/qmail/control https://raw.githubusercontent.com/qmtoaster/posttoasty/main/servercert.pem
+mkdir -p /var/qmail/{users,control,bin}
 wget -P /var/qmail/bin  https://github.com/qmtoaster/posttoasty/raw/main/qmail-newu
 chmod 0700 /var/qmail/bin/qmail-newu
-chown root:qmail /var/qmail/bin/qmail-newu
+chown -R root:qmail /var/qmail
+wget -P /var/qmail/control https://raw.githubusercontent.com/qmtoaster/posttoasty/main/servercert.pem
 
 #
 # Set MySQL password, start, and add vpopmail db
