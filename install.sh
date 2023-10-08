@@ -96,7 +96,7 @@ wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main
 wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main/domain-maps.cf
 wget -P /etc/postfix https://raw.githubusercontent.com/qmtoaster/posttoasty/main/virtual-maps.cf
 network=`ip -o -f inet addr show | awk '/scope global/ {print $4}' | sed 's#[0-9]*/#0/#g'`
-sed -i "s,^mynetworks.*,mynetworks = $network," main.cf
+sed -i "s,^mynetworks.*,mynetworks = $network," /etc/postfix/main.cf
 postmap /etc/postfix/virtual
 systemctl enable --now postfix
 
