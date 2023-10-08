@@ -20,8 +20,8 @@ TAB="$(printf '\t')" && GREEN=$(tput setaf 2) && RED=$(tput setaf 1) && NORMAL=$
 # Enable local name server
 #
 dnf -y install bind bind-utils
-sed -i 's/nameserver .*/nameserver 127.0.0.1/' /etc/resolv.conf
 systemctl enable --now named
+sed -i 's/nameserver .*/nameserver 127.0.0.1/' /etc/resolv.conf
 
 #
 # Add postfix user...conflicts with vpopmail user
