@@ -19,7 +19,7 @@ TAB="$(printf '\t')" && GREEN=$(tput setaf 2) && RED=$(tput setaf 1) && NORMAL=$
 #
 # Enable local name server
 #
-dnf -y install bind bind-utils
+dnf -y install bind bind-utils wget
 systemctl enable --now named
 sed -i 's/nameserver .*/nameserver 127.0.0.1/' /etc/resolv.conf
 
