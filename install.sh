@@ -17,6 +17,11 @@ TAB="$(printf '\t')" && GREEN=$(tput setaf 2) && RED=$(tput setaf 1) && NORMAL=$
   echo -n "Reload firewall settings : " && tput setaf 2 && firewall-cmd --reload && tput sgr0
 
 #
+# Update server
+#
+dny -y update
+
+#
 # Enable local name server
 #
 dnf -y install bind bind-utils wget
