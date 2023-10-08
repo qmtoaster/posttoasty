@@ -17,6 +17,13 @@ TAB="$(printf '\t')" && GREEN=$(tput setaf 2) && RED=$(tput setaf 1) && NORMAL=$
   echo -n "Reload firewall settings : " && tput setaf 2 && firewall-cmd --reload && tput sgr0
 
 #
+# Enable local name server
+#
+dnf -y install named bind-utils
+sed -i 's/nameserver .*/nameserver 127.0.0.1/' /etc/resolv.conf
+systemctl enable --now named
+
+#
 # Add postfix user...conflicts with vpopmail user
 #
 useradd -s /sbin/nologin -b /var/spool postfix
@@ -24,16 +31,8 @@ useradd -s /sbin/nologin -b /var/spool postfix
 #
 # Install mail server software
 #
-dnf -y install postfix postfix-mysql mysql-server dovecot dovecot-mysql named
+dnf -y install postfix postfix-mysql mysql-server dovecot dovecot-mysql
 dnf -y install http://repo.qmailtoaster.com/8/spl/sqlmd/mysql/testing/x86_64/vpopmail-5.4.33-5.qt.md.el8.x86_64.rpm
-
-#chown -R postfix:root /var/spool/postfix
-#chown -R postfix:postdrop /var/spool/postfix/maildrop
-#chown -R postfix:postdrop /var/spool/postfix/public
-#chown -R root:root /var/spool/postfix/pid
-#chown root:root /var/spool/postfix
-#chown postfix:root /var/lib/postfix
-#chown postfix:postfix /var/lib/postfix/master*
 
 #
 # Add necessary vpopmail files and folders
@@ -100,12 +99,6 @@ network=`ip -o -f inet addr show | awk '/scope global/ {print $4}' | sed 's#[0-9
 sed -i "s,^mynetworks.*,mynetworks = $network," main.cf
 postmap /etc/postfix/virtual
 systemctl enable --now postfix
-
-#
-# Enable local name server
-#
-sed -i 's/nameserver .*/nameserver 127.0.0.1/' /etc/resolv.conf
-systemctl enable --now named
 
 #
 # Download test script
