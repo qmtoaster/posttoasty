@@ -7,7 +7,7 @@ setenforce 0
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 
 #
-# Open necessary firewall port, and disable selinux
+# Open necessary firewall ports
 #
 TAB="$(printf '\t')" && GREEN=$(tput setaf 2) && RED=$(tput setaf 1) && NORMAL=$(tput sgr0) && \
   systemctl start firewalld && systemctl enable firewalld && \
@@ -42,9 +42,7 @@ groupadd -g 2108 -r qmail
 mkdir -p /var/qmail/users
 mkdir /var/qmail/control
 mkdir /var/qmail/bin
-chown root:qmail /var/qmail
-chown root:qmail /var/qmail/control
-chown root:qmail /var/qmail/users
+chown -R root:qmail /var/qmail
 wget -P /var/qmail/control https://raw.githubusercontent.com/qmtoaster/posttoasty/main/servercert.pem
 wget -P /var/qmail/bin  https://github.com/qmtoaster/posttoasty/raw/main/qmail-newu
 chmod 0700 /var/qmail/bin/qmail-newu
